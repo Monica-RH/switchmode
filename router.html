@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Switch Mode — Loading your result...</title>
+<style>
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f5f2eb;
+    color: #1a1814;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+  }
+  p {
+    font-size: 15px;
+    color: #7a7060;
+    letter-spacing: 0.04em;
+  }
+</style>
+</head>
+<body>
+<p>Loading your result...</p>
+<script>
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+
+    const b = parseInt(params.get('b') || '0', 10);
+    const h = parseInt(params.get('h') || '0', 10);
+    const g = parseInt(params.get('g') || '0', 10);
+    const x = parseInt(params.get('x') || '0', 10);
+
+    let type = 'x'; // default fallback = Looper
+
+    // Rule 1: Looper — high X with no dominant mode
+    if (x >= 4 && b <= 3 && h <= 3 && g <= 3) {
+      type = 'x';
+    }
+    // Rule 2: Overthinker — B is highest
+    else if (b >= h && b >= g) {
+      type = 'b';
+    }
+    // Rule 3: People-Pleaser — H is highest
+    else if (h > b && h >= g) {
+      type = 'h';
+    }
+    // Rule 4: Doubting Intuitive — G is highest
+    else if (g > b && g > h) {
+      type = 'g';
+    }
+    // Rule 5: Any tie = Looper
+    else {
+      type = 'x';
+    }
+
+    // Redirect to the correct result page
+    window.location.replace(
+      'https://monica-rh.github.io/switchmode/?type=' + type
+    );
+  })();
+</script>
+</body>
+</html>
