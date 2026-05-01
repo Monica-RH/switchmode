@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Switch Mode — Your Results</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1814;
+    --paper: #f5f2eb;
+    --warm-mid: #e8e0d0;
+    --accent-b: #2d5a8e;
+    --accent-h: #8e4a2d;
+    --accent-g: #2d7a5a;
+    --accent-x: #6b5e8e;
+    --muted: #7a7060;
+    --rule: rgba(26,24,20,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* NAV TABS — hidden for direct result links */
+  .result-nav {
+    display: none;
+  }
+
+  .tab {
+    flex: 1;
+    min-width: 140px;
+    padding: 18px 12px 16px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  .tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+  .tab:hover:not(.active) { color: var(--ink); }
+
+  /* PAGE WRAPPER */
+  .result-page { display: none; }
+  .result-page.active { display: block; }
+
+  /* HERO */
+  .hero {
+    padding: 72px 40px 56px;
+    max-width: 780px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .result-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .result-label span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 10px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+  }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(38px, 6vw, 64px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+  }
+
+  .hero .tagline {
+    font-size: 19px;
+    line-height: 1.6;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 560px;
+  }
+
+  /* BODY CONTENT */
+  .body-content {
+    padding: 56px 40px;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  .section { margin-bottom: 52px; }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .section p {
+    font-size: 17px;
+    line-height: 1.75;
+    font-weight: 300;
+    margin-bottom: 20px;
+    color: var(--ink);
+  }
+
+  .section p:last-child { margin-bottom: 0; }
+
+  .section p strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  /* PATTERN BLOCK */
+  .pattern-block {
+    background: var(--warm-mid);
+    border-radius: 2px;
+    padding: 32px 36px;
+    margin: 32px 0;
+  }
+
+  .pattern-block .pattern-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .pattern-block p {
+    font-size: 17px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* SCIENCE NOTE */
+  .science-note {
+    border-left: 2px solid var(--rule);
+    padding: 20px 0 20px 28px;
+    margin: 36px 0;
+  }
+
+  .science-note p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--muted);
+    font-weight: 300;
+    margin: 0;
+  }
+
+  .science-note p strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  /* SIGNS LIST */
+  .signs-list {
+    list-style: none;
+    margin: 24px 0;
+  }
+
+  .signs-list li {
+    font-size: 16px;
+    line-height: 1.6;
+    font-weight: 300;
+    padding: 14px 0 14px 28px;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+
+  .signs-list li:first-child { border-top: 1px solid var(--rule); }
+
+  .signs-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted);
+  }
+
+  /* CTA BLOCK */
+  .cta-block {
+    margin-top: 64px;
+    padding: 52px 40px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 2px;
+  }
+
+  .cta-block .cta-eyebrow {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(245,242,235,0.5);
+    margin-bottom: 20px;
+  }
+
+  .cta-block h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(26px, 4vw, 38px);
+    line-height: 1.15;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+  }
+
+  .cta-block h2 em { font-style: italic; }
+
+  .cta-block .cta-body {
+    font-size: 16px;
+    line-height: 1.7;
+    font-weight: 300;
+    color: rgba(245,242,235,0.75);
+    margin-bottom: 36px;
+    max-width: 520px;
+  }
+
+  .cta-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .cta-price {
+    font-family: 'DM Serif Display', serif;
+    font-size: 44px;
+    letter-spacing: -0.02em;
+  }
+
+  .cta-price-desc {
+    font-size: 14px;
+    color: rgba(245,242,235,0.5);
+    font-weight: 300;
+    line-height: 1.4;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 18px 40px;
+    text-decoration: none;
+    border-radius: 1px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+
+  .cta-btn:hover { opacity: 0.85; }
+
+  .cta-guarantee {
+    margin-top: 20px;
+    font-size: 13px;
+    color: rgba(245,242,235,0.4);
+    font-weight: 300;
+  }
+
+  /* WHAT'S INSIDE */
+  .inside-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin: 24px 0;
+    background: var(--rule);
+  }
+
+  .inside-item {
+    background: var(--paper);
+    padding: 24px 28px;
+  }
+
+  .inside-item .item-num {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .inside-item .item-title {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .inside-item .item-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* COLOR ACCENTS PER RESULT */
+  [data-result="b"] .hero { border-top: 3px solid var(--accent-b); }
+  [data-result="b"] .result-label span { background: var(--accent-b); }
+  [data-result="b"] .tab.active { border-bottom-color: var(--accent-b); }
+
+  [data-result="h"] .hero { border-top: 3px solid var(--accent-h); }
+  [data-result="h"] .result-label span { background: var(--accent-h); }
+
+  [data-result="g"] .hero { border-top: 3px solid var(--accent-g); }
+  [data-result="g"] .result-label span { background: var(--accent-g); }
+
+  [data-result="x"] .hero { border-top: 3px solid var(--accent-x); }
+  [data-result="x"] .result-label span { background: var(--accent-x); }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .hero { padding: 48px 24px 40px; }
+    .body-content { padding: 40px 24px; }
+    .cta-block { padding: 40px 24px; margin-top: 40px; }
+    .inside-grid { grid-template-columns: 1fr; }
+    .pattern-block { padding: 24px; }
+  }
+
+  /* FADE IN */
+  .result-page.active .hero,
+  .result-page.active .body-content {
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV TABS -->
+<nav class="result-nav">
+  <button class="tab active" onclick="showResult('b')">The Overthinker</button>
+  <button class="tab" onclick="showResult('h')">The People-Pleaser</button>
+  <button class="tab" onclick="showResult('g')">The Doubting Intuitive</button>
+  <button class="tab" onclick="showResult('x')">The Looper</button>
+</nav>
+
+
+<!-- ===================== RESULT 1: THE OVERTHINKER ===================== -->
+<div class="result-page active" id="result-b" data-result="b">
+  <div class="hero">
+    <div class="result-label">
+      <span></span>Your Switch Mode result — <strong>The Overthinker</strong>
+    </div>
+    <h1>You're not <em>overthinking.</em><br>Your brain is stuck<br>in one gear.</h1>
+    <p class="tagline">You analyze everything — which is a genuine strength. Until it isn't. Here's what's actually happening, and why the solution isn't "think less."</p>
+  </div>
+
+  <div class="body-content">
+
+    <div class="section">
+      <div class="section-label">The pattern</div>
+      <p>You make decisions by building models. You gather information, map variables, run scenarios. This is not a flaw — it's a legitimate form of intelligence. In the right context, it's exactly what's needed.</p>
+      <p>But somewhere along the way, your brain started treating <strong>everything</strong> as a problem that required this approach. Career decisions. Creative choices. Conversations. Relationships. The analytical mode that helps you succeed at work became the default setting for your entire life — and that's where it breaks down.</p>
+
+      <div class="pattern-block">
+        <div class="pattern-title">What this looks like in practice</div>
+        <p>You research a decision until you're more confused than when you started. You write pros and cons lists for things you already know the answer to. Your best ideas arrive in the shower — somewhere your analytical mind can't follow. You feel vaguely stuck, not because you lack information, but because you have too much of it and no way to integrate it.</p>
+      </div>
+
+      <p>The frustrating part is that more thinking doesn't solve the problem. The problem <em>is</em> the thinking. You're trying to use a logical tool to solve what is fundamentally an emotional or intuitive question — and logic isn't built for that.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Why this happens</div>
+      <p>Your brain — like every brain — is a prediction machine. It doesn't react to the world; it constructs your experience of it by drawing on everything you've learned, weighted by what's worked before. Neuroscientist Lisa Feldman Barrett calls this your brain's core job: prediction, not perception.</p>
+
+      <div class="science-note">
+        <p><strong>The neuroscience behind it:</strong> Your brain isn't three separate systems — the rational neocortex overruling the emotional limbic system, as the old triune brain model suggested. That model has been thoroughly discredited. What's actually happening is one integrated system that can operate in different modes depending on how it's been trained and what it's been rewarded for. If analysis has been consistently rewarded in your life — at school, at work, in your culture — your brain has strengthened those neural pathways until they became the default response to almost everything. The other modes haven't been rewarded, so they've weakened. You're not broken. Your brain did exactly what brains do.</p>
+      </div>
+
+      <p>The technical term for this is <strong>mode rigidity</strong> — the neural equivalent of a car that only has one gear. Functional. Impressive, even, in the right conditions. Grinding and ineffective everywhere else.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Signs this is your pattern</div>
+      <ul class="signs-list">
+        <li>You regularly know the answer but can't commit to it without more data</li>
+        <li>Creative work feels harder than it should — your inner editor fires before the idea is fully formed</li>
+        <li>You feel most alive intellectually but often disconnected from what you actually want</li>
+        <li>Other people tell you to "trust your gut" and you find this advice genuinely unhelpful</li>
+        <li>You postpone decisions not because you're lazy but because the analysis is never quite complete</li>
+        <li>Your best work often happens when circumstances force you to act without time to prepare</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-label">What the switch looks like</div>
+      <p>The goal is not to become less analytical. Your analytical capacity is real and valuable — it needs to be deployed at the right moment, not abandoned. The skill is learning to recognize when you've extracted everything useful from that mode and need to shift.</p>
+      <p>This means deliberately activating what neuroscientists call somatic and relational processing — the modes associated with embodied sense-making and emotional-social intelligence. These aren't softer or less rigorous. They're just faster and more appropriate for certain categories of decision and action.</p>
+      <p>When you learn to switch deliberately — to run an analysis, then consciously put it down and shift modes to integrate what you've gathered — decisions stop being exhausting. They become what they're supposed to be: a conversation between different parts of your intelligence, not a war between them.</p>
+    </div>
+
+    <!-- WHAT'S INSIDE -->
+    <div class="section">
+      <div class="section-label">What the Switch Mode toolkit gives you</div>
+      <div class="inside-grid">
+        <div class="inside-item">
+          <div class="item-num">01</div>
+          <div class="item-title">The Mode Map</div>
+          <div class="item-desc">A clear framework for identifying which mode you're operating in — and which one the situation actually calls for.</div>
+        </div>
+        <div class="inside-item">
+          <div class="item-num">02</div>
+          <div class="item-title">The Overthinking Exit</div>
+          <div class="item-desc">A specific protocol for recognizing when analysis has stopped producing insight — and how to deliberately shift out of it.</div>
+        </div>
+        <div class="inside-item">
+          <div class="item-num">03</div>
+          <div class="item-title">Decision Templates</div>
+          <div class="item-desc">Practical frameworks for different decision types — so you know which cognitive tool to reach for before you start, not after.</div>
+        </div>
+        <div class="inside-item">
+          <div class="item-num">04</div>
+          <div class="item-title">Mode Activation Prompts</div>
+          <div class="item-desc">Short exercises to activate relational and somatic processing — especially useful when you feel stuck in your head.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-block">
+      <div class="cta-eyebrow">The Switch Mode Toolkit</div>
+      <h2>Your brain isn't broken.<br><em>It just needs a second gear.</em></h2>
+      <p class="cta-body">The Switch Mode Toolkit is a practical set of frameworks, templates, and prompts built specifically for people whose analytical intelligence has become their biggest obstacle. Everything is grounded in neuroscience, designed for immediate use.</p>
+      <div class="cta-price-row">
+        <span class="cta-price">$27</span>
+        <span class="cta-price-desc">One-time · Instant access<br>PDF + Notion template</span>
+      </div>
+      <a href="#" class="cta-btn">Get the toolkit →</a>
+      <p class="cta-guarantee">If it doesn't shift something in the first session, email us for a full refund.</p>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ===================== RESULT 2: THE PEOPLE-PLEASER ===================== -->
+<div class="result-page" id="result-h" data-result="h">
+  <div class="hero">
+    <div class="result-label">
+      <span></span>Your Switch Mode result — <strong>The People-Pleaser</strong>
+    </div>
+    <h1>You know what<br>you want. You just<br><em>keep overriding it.</em></h1>
+    <p class="tagline">Your emotional intelligence is real and unusually high. The problem isn't that you feel too much — it's that someone else's feelings have been given a veto over your own judgment.</p>
+  </div>
+
+  <div class="body-content">
+
+    <div class="section">
+      <div class="section-label">The pattern</div>
+      <p>You are perceptive in ways most people aren't. You pick up on emotional undercurrents in a room before anyone names them. You understand what people need, sometimes before they do. This is not a weakness — it's a sophisticated form of social intelligence, and it makes you a person others trust and rely on.</p>
+      <p>But somewhere along the way, this sensitivity became a filter that sits between you and your own decisions. You know what you think. Then you run a quick calculation: <strong>how will this land? Who will be disappointed? Am I being too much?</strong> And often, you override your own judgment — not because the other reading was more accurate, but because it was safer.</p>
+
+      <div class="pattern-block">
+        <div class="pattern-title">What this looks like in practice</div>
+        <p>You agree to things you meant to decline, then feel resentment you can't quite justify. You soften your opinions in conversation and later wish you'd said what you actually meant. You are reliably good at supporting other people's clarity while staying oddly foggy about your own. You've been described as easy to work with, easy to be around — and occasionally you wonder if that's a compliment or an erasure.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Why this happens</div>
+      <p>John Bargh's research on the unconscious mind identifies social belonging as one of the three deepest drivers of human behavior — older, evolutionarily, than conscious reasoning. Your brain learned early that reading others accurately, keeping the peace, and adjusting yourself to maintain relationships was adaptive. It worked. You were rewarded for it.</p>
+
+      <div class="science-note">
+        <p><strong>The neuroscience behind it:</strong> Lisa Feldman Barrett's research shows that emotions are not hardwired reactions — they are constructed predictions, built by a brain that has learned which signals to weight heavily. If your brain learned that other people's emotional states are high-priority signals — because attending to them kept you safe, valued, included — it will continue weighting them heavily even when the situation no longer requires it. Your emotional intelligence didn't betray you. Your brain just generalized an adaptive pattern to contexts where it no longer serves you.</p>
+      </div>
+
+      <p>The result is what Designing the Mind researchers call a <strong>maladaptive emotional algorithm</strong> — a pattern that was once genuinely useful, running in contexts where it generates noise rather than signal. Your capacity for relational attunement is real. The problem is that it's running at all times, including when you need to be operating in analytical or intuitive mode instead.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Signs this is your pattern</div>
+      <ul class="signs-list">
+        <li>You often know what you want to do, but find yourself doing what seems expected instead</li>
+        <li>Receiving critical feedback triggers a disproportionate emotional response, even when you agree with the feedback</li>
+        <li>Your best decisions often came after someone pushed you past your hesitation</li>
+        <li>You find it easier to advocate fiercely for others than for yourself</li>
+        <li>In groups, you often adjust your expressed opinion based on who's in the room</li>
+        <li>You sometimes feel resentful without being able to point to what exactly you're resentful about</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-label">What the switch looks like</div>
+      <p>The goal is not to become less empathetic. Your relational intelligence is not the problem — it's one of your most valuable assets. The goal is to stop giving it an unconditional veto over your analytical and intuitive processing.</p>
+      <p>This means learning to notice when you've shifted into a relational assessment — scanning the room, managing others' responses, anticipating reactions — and making a deliberate choice about whether that's the most useful mode for the moment. Sometimes it is. Often, especially when you're making decisions about your own work or life, it isn't.</p>
+      <p>When you can switch consciously — choose to run the relational assessment first, extract what's useful, then deliberately shift to your own judgment center — other people's needs stop being a cage and become what they're supposed to be: one input among several, weighted appropriately.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">What the Switch Mode toolkit gives you</div>
+      <div class="inside-grid">
+        <div class="inside-item">
+          <div class="item-num">01</div>
+          <div class="item-title">The Mode Map</div>
+          <div class="item-desc">A clear framework for identifying when you've shifted into relational scanning mode — and whether that's what you actually need right now.</div>
+        </div>
+        <div class="inside-item">
+          <div class="item-num">02</div>
+          <div class="item-title">The Override Protocol</div>
+          <div class="item-desc">A specific sequence for reclaiming your own judgment after you've gathered relational information — so you use it rather than being used by it.</div>
+        </div>
+        <div class="inside-item">
+          <div class="item-num">03</div>
+          <div class="item-title">Decision Templates</div>
+          <div class="item-desc">Frameworks that separate "what do others need?" from "what do I think?" — especially useful for high-stakes decisions with relational weight.</div>
+        </div>
+        <div class="inside-item">
+          <div class="item-num">04</div>
+          <div class="item-title">Mode Activation Prompts</div>
+          <div class="item-desc">Short exercises to access analytical and intuitive processing when your relational antenna is running everything.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-block">
+      <div class="cta-eyebrow">The Switch Mode Toolkit</div>
+      <h2>Your sensitivity is a strength.<br><em>It just needs a boundary.</em></h2>
+      <p class="cta-body">The Switch Mode Toolkit is a practical set of frameworks, templates, and prompts built for people whose emotional intelligence has become a filter that mutes their own judgment. Grounded in neuroscience. Immediately actionable.</p>
+      <div class="cta-price-row">
+        <span class="cta-price">$27</span>
+        <span class="cta-price-desc">One-time · Instant access<br>PDF + Notion template</span>
+      </div>
+      <a href="#" class="cta-btn">Get the toolkit →</a>
+      <p class="cta-guarantee">If it doesn't shift something in the first session, email us for a full refund.</p>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ===================== RESULT 3: THE DOUBTING INTUITIVE ===================== -->
+<div class="result-page" id="result-g" data-result="g">
+  <div class="hero">
+    <div class="result-label">
+      <span></span>Your Switch Mode result — <strong>The Doubting Intuitive</strong>
+    </div>
+    <h1>Your instincts are<br><em>right more often<br>than you act on them.</em></h1>
+    <p class="tagline">You have unusually good pattern recognition. The problem is you've been trained to distrust it — so you override it, second-guess it, or wait for it to become something more explainable.</p>
+  </div>
+
+  <div class="body-content">
+
+    <div class="section">
+      <div class="section-label">The pattern</div>
+      <p>You often know something before you can say why you know it. A situation feels wrong before any evidence surfaces. A decision feels clear before you've finished gathering information. A person feels unreliable before they've done anything to prove it.</p>
+      <p>And then you talk yourself out of it. Because you can't explain it. Because it doesn't fit a spreadsheet. Because someone asks "but <em>why</em> do you think that?" and you don't have an answer that sounds legitimate.</p>
+
+      <div class="pattern-block">
+        <div class="pattern-title">What this looks like in practice</div>
+        <p>You look back on pivotal decisions and notice: you knew. You knew the job wasn't right before you took it. You knew the partnership would fail before the signs became obvious. You knew the right answer before the meeting started. But you didn't trust that knowing — you buried it under more acceptable reasoning, waited for evidence, let the moment pass. The regret isn't about the outcome. It's about having been right and not acting on it.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Why this happens</div>
+      <p>What we call gut instinct is not mystical. It is your brain's fastest processing system — pattern recognition built from thousands of accumulated experiences, running below the threshold of conscious awareness and surfacing as a physical sensation, a felt sense, a sudden knowing.</p>
+
+      <div class="science-note">
+        <p><strong>The neuroscience behind it:</strong> The enteric nervous system — the roughly 100 million neurons lining your gastrointestinal tract — operates as a genuine second nervous system, functioning independently of the brain while communicating directly with it via the vagus nerve. This is not metaphor. Researchers have confirmed through fMRI studies that when people make intuitive judgments, gut-related brain regions become highly active. Your gut instinct is neurologically real. It is fast-and-frugal pattern recognition — what psychologist Gerd Gigerenzer describes as the brain using minimal information to generate accurate judgments in situations too complex or fast-moving for deliberate analysis. The problem is that most of us were educated and socialized in environments that only rewarded the slow, explicit, show-your-work kind of knowing.</p>
+      </div>
+
+      <p>John Bargh's research on unconscious cognition makes the same point from a different angle: the hidden mind is not your enemy. It is the sum of everything you've learned and experienced, compressed into rapid-fire signal. The problem isn't the signal. It's that you've been taught it doesn't count.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Signs this is your pattern</div>
+      <ul class="signs-list">
+        <li>You have a strong track record of being right about people and situations — after the fact</li>
+        <li>Physical sensations (stomach dropping, sudden energy, inexplicable discomfort) often precede clarity</li>
+        <li>You find yourself constructing post-hoc justifications for decisions you'd already made intuitively</li>
+        <li>You perform better in fast-moving, ambiguous situations than in deliberate planning ones</li>
+        <li>Other people describe you as perceptive but sometimes "difficult to read"</li>
+        <li>When you've ignored a strong gut sense, you've usually regretted it</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-label">What the switch looks like</div>
+      <p>The goal is not to become impulsive. Raw intuition without integration isn't wisdom — it's just speed. The goal is to treat your somatic intelligence as the legitimate signal it is, and then deliberately switch modes to validate and contextualize it rather than dismiss it.</p>
+      <p>This means learning to recognize the felt sense when it arrives — giving it a moment rather than immediately overriding it — and then running a quick analytical and relational check: does the data confirm or complicate this reading? What am I not seeing?</p>
+      <p>When you can do this — when intuition becomes a starting point rather than a secret you suppress — your decision-making gets dramatically faster and more confident. You stop waiting for permission from your analysis to act on what you already know.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">What the Switch Mode toolkit gives you</div>
+      <div class="inside-grid">
+        <div class="inside-item">
+          <div class="item-num">01</div>
+          <div class="item-title">The Mode Map</div>
+          <div class="item-desc">A framework for taking somatic and intuitive signals seriously — and integrating them with analytical and relational processing rather than choosing between them.</div>
+        </div>
+        <div class="inside-item">
+          <div class="item-num">02</div>
+          <div class="item-title">The Signal Log</div>
+          <div class="item-desc">A structured way to track your intuitive reads and their outcomes — building an evidence base that finally makes your gut intelligence legible to your analytical mind.</div>
+        </div>
+        <div class="inside-item">
+          <div class="item-num">03</div>
+          <div class="item-title">Decision Templates</div>
+          <div class="item-desc">Frameworks that give your intuition a formal role in the decision process — so it informs rather than fights with your analysis.</div>
+        </div>
+        <div class="inside-item">
+          <div class="item-num">04</div>
+          <div class="item-title">Mode Activation Prompts</div>
+          <div class="item-desc">Exercises to strengthen your ability to access and articulate somatic processing — especially useful before high-stakes situations.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-block">
+      <div class="cta-eyebrow">The Switch Mode Toolkit</div>
+      <h2>Your gut isn't guessing.<br><em>It's pattern-matching at speed.</em></h2>
+      <p class="cta-body">The Switch Mode Toolkit is a practical set of frameworks, templates, and prompts built for people who need to stop treating their best intelligence like a liability. Grounded in neuroscience. Built for immediate use.</p>
+      <div class="cta-price-row">
+        <span class="cta-price">$27</span>
+        <span class="cta-price-desc">One-time · Instant access<br>PDF + Notion template</span>
+      </div>
+      <a href="#" class="cta-btn">Get the toolkit →</a>
+      <p class="cta-guarantee">If it doesn't shift something in the first session, email us for a full refund.</p>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ===================== RESULT 4: THE LOOPER ===================== -->
+<div class="result-page" id="result-x" data-result="x">
+  <div class="hero">
+    <div class="result-label">
+      <span></span>Your Switch Mode result — <strong>The Looper</strong>
+    </div>
+    <h1>You're not stuck<br>in one mode.<br><em>You're stuck in all three.</em></h1>
+    <p class="tagline">You analyze, then feel doubt, then sense something's off, then start over. This isn't indecision — it's a loop. And it's the most exhausting kind of stuck there is.</p>
+  </div>
+
+  <div class="body-content">
+
+    <div class="section">
+      <div class="section-label">The pattern</div>
+      <p>Most people who struggle with decisions are stuck in one mode — they over-analyze, or they over-accommodate, or they over-intuit. Your situation is more complicated, and in some ways more interesting.</p>
+      <p>You cycle. You start with analysis, build a picture, then doubt it. You check against how it feels, get a reading, then second-guess that too. You sense something directionally right, then immediately want to validate it with more data. You complete the loop and land back where you started. Repeat.</p>
+
+      <div class="pattern-block">
+        <div class="pattern-title">What this looks like in practice</div>
+        <p>Decisions that should take an hour take weeks. You can articulate all sides of a question fluently — which makes other people assume you're close to deciding, when you're actually nowhere near it. You've been told you're thoughtful, careful, thorough. What you feel, privately, is exhausted. The analysis is real. The feelings are real. The instincts are real. None of them ever quite lands.</p>
+      </div>
+
+      <p>The problem isn't that you lack the right information or the right feelings or the right instincts. It's that you haven't learned how to <strong>complete a cognitive cycle</strong> — to run a mode, extract what it offers, and then consciously hand off to the next one rather than cycling back indefinitely.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Why this happens</div>
+      <p>Your brain is a prediction machine, and prediction requires confidence in the signal. When you've been in environments where analysis was sometimes right and sometimes punished, where emotions were sometimes valid and sometimes dismissed, where instincts were sometimes trusted and sometimes overridden — your brain learns that no single signal is reliable enough to act on alone.</p>
+
+      <div class="science-note">
+        <p><strong>The neuroscience behind it:</strong> Chantel Prat's research on individual neuroscience shows that brains with high complexity — the ability to configure themselves into many distinct neural patterns — are often the most creative and adaptable. But that same complexity can generate what looks like indecision: multiple processing modes firing with roughly equal weight, none dominating clearly enough to produce a committed output. Lisa Feldman Barrett adds another layer: when the brain's prediction system lacks confidence in any of its models, it loops — running scenarios repeatedly, hoping more cycles will produce clarity. They don't. Clarity requires completing a cycle, not extending it.</p>
+      </div>
+
+      <p>The Psychitecture researchers would describe this as a cascade of competing algorithms — analytical, emotional, and behavioral — each partially activated and none fully executed. The result is what they call a <strong>warped decision loop</strong>: genuine intelligence producing paralysis instead of action.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">Signs this is your pattern</div>
+      <ul class="signs-list">
+        <li>You can argue both sides of almost any personal decision convincingly</li>
+        <li>You've been in "deciding" mode about certain questions for so long the question itself feels stale</li>
+        <li>You often feel most clear immediately after being forced to decide — not before</li>
+        <li>You've noticed that your best decisions came when external circumstances removed the loop</li>
+        <li>You are not afraid of the wrong choice — you're exhausted by the process of getting there</li>
+        <li>Other people's decisiveness both impresses and slightly irritates you</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="section-label">What the switch looks like</div>
+      <p>The goal is not to eliminate one mode or trust another one more. All three of your modes are real and functioning — the problem is sequencing, not capacity. What you're missing is a protocol for completing a cycle rather than extending it.</p>
+      <p>This means learning to run each mode with a defined endpoint — analysis until diminishing returns, emotional check-in until the reading is clear, somatic sense until you've registered it — and then committing to a handoff rather than doubling back. The switch isn't about choosing one mode over the others. It's about learning to close a loop.</p>
+      <p>Once you can do this, your intelligence — which is genuinely high and genuinely multi-modal — stops working against itself. The three modes become a sequence rather than a storm. And decisions that have been sitting open for months start resolving in an afternoon.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-label">What the Switch Mode toolkit gives you</div>
+      <div class="inside-grid">
+        <div class="inside-item">
+          <div class="item-num">01</div>
+          <div class="item-title">The Mode Map</div>
+          <div class="item-desc">A framework for identifying which mode you're currently in — and recognizing when it's produced what it can and needs to hand off.</div>
+        </div>
+        <div class="inside-item">
+          <div class="item-num">02</div>
+          <div class="item-title">The Loop-Breaker</div>
+          <div class="item-desc">A specific protocol for completing a decision cycle — designed for people who have all the ingredients but can't find the exit.</div>
+        </div>
+        <div class="inside-item">
+          <div class="item-num">03</div>
+          <div class="item-title">Decision Templates</div>
+          <div class="item-desc">Frameworks that impose structure on the cycle — giving each mode its moment and then sequencing the handoff cleanly.</div>
+        </div>
+        <div class="inside-item">
+          <div class="item-num">04</div>
+          <div class="item-title">The Open Decisions Audit</div>
+          <div class="item-desc">A one-time exercise to identify every loop currently running in your life — and a systematic method for closing them.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta-block">
+      <div class="cta-eyebrow">The Switch Mode Toolkit</div>
+      <h2>You don't need more information.<br><em>You need a way out of the loop.</em></h2>
+      <p class="cta-body">The Switch Mode Toolkit is a practical set of frameworks, templates, and prompts built for multi-modal thinkers who have everything except a way to complete a cognitive cycle. Grounded in neuroscience. Built to break the loop.</p>
+      <div class="cta-price-row">
+        <span class="cta-price">$27</span>
+        <span class="cta-price-desc">One-time · Instant access<br>PDF + Notion template</span>
+      </div>
+      <a href="#" class="cta-btn">Get the toolkit →</a>
+      <p class="cta-guarantee">If it doesn't shift something in the first session, email us for a full refund.</p>
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+  // Read ?type=b / h / g / x from the URL and show only that result
+  (function () {
+    const params = new URLSearchParams(window.location.search);
+    const type = (params.get('type') || 'x').toLowerCase();
+    const valid = ['b', 'h', 'g', 'x'];
+    const id = valid.includes(type) ? type : 'x';
+
+    document.querySelectorAll('.result-page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById('result-' + id);
+    if (target) target.classList.add('active');
+  })();
+</script>
+</body>
+</html>
